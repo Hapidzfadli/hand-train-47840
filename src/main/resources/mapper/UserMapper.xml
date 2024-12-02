@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hand.infra.mapper.UserMapper">
+
+    <resultMap id="UserResultMap" type="com.hand.api.dto.request.UserDTO">
+        <id property="id" column="ID"/>
+        <result property="email" column="email"/>
+        <result property="employeeName" column="employeeName"/>
+        <result property="employeeNumber" column="employeeNumber"/>
+        <result property="userAccount" column="userAccount"/>
+        <result property="userPassword" column="userPassword"/>
+        <result property="creationDate" column="creationDate"/>
+        <result property="createdBy" column="createdBy"/>
+        <result property="lastUpdatedBy" column="lastUpdatedBy"/>
+        <result property="lastUpdateDate" column="lastUpdateDate"/>
+        <result property="objectVersionNumber" column="objectVersionNumber"/>
+        <collection property="taskList" ofType="com.hand.api.dto.request.TaskDTO">
+            <id property="id" column="TASK_ID"/>
+            <result property="state" column="TASK_STATE"/>
+            <result property="taskDescription" column="TASK_DESCRIPTION"/>
+            <result property="taskNumber" column="TASK_NUMBER"/>
+            <result property="tenantId" column="TASK_TENANT_ID"/>
+            <result property="creationDate" column="TASK_CREATION_DATE"/>
+            <result property="createdBy" column="TASK_CREATED_BY"/>
+            <result property="lastUpdatedBy" column="TASK_LAST_UPDATED_BY"/>
+            <result property="lastUpdateDate" column="TASK_LAST_UPDATE_DATE"/>
+            <result property="objectVersionNumber" column="TASK_OBJECT_VERSION_NUMBER"/>
+            <result property="taskType" column="TASK_TASK_TYPE"/>
+        </collection>
+    </resultMap>
+
+    <sql id = "BaseSql">
+        tu.ID,
+        tu.email,
+        tu.employee_name,
+        tu.employee_number,
+        tu.user_account,
+        tu.user_password,
+        tu.creation_date, 
+        tu.created_by, 
+        tu.last_updated_by, 
+        tu.last_update_date, 
+        tu.object_version_number
+    </sql>
+
+    <select id = "selectList" resultType = "com.hand.domain.entity.User">
+        select
+        <include refid = "BaseSql"/>
+        from todo_user tu
+        <where>
+            <if test="id !=null">
+                and tu.ID = #{id,jdbcType = INTEGER}
+            </if>
+            <if test="email !=null">
+                and tu.email = #{email,jdbcType = VARCHAR}
+            </if>
+            <if test="employeeName !=null">
+                and tu.employee_name = #{employeeName,jdbcType = VARCHAR}
+            </if>
+            <if test="employeeNumber !=null">
+                and tu.employee_number = #{employeeNumber,jdbcType = VARCHAR}
+            </if>
+            <if test="userAccount !=null">
+                and tu.user_account = #{userAccount,jdbcType = VARCHAR}
+            </if>
+            <if test="userPassword !=null">
+                and tu.user_password = #{userPassword,jdbcType = VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id = "selectListExport" resultMap="UserResultMap">
+        select
+        tu.ID as ID,
+        tu.email as email,
+        tu.employee_name as employeeName,
+        tu.employee_number as employeeNumber,
+        tu.user_account as userAccount,
+        tu.user_password as userPassword,
+        tu.creation_date as creationDate,
+        tu.created_by as createdBy,
+        tu.last_updated_by as lastUpdatedBy,
+        tu.last_update_date as lastUpdateDate,
+        tu.object_version_number as objectVersionNumber,
+        tt.ID as TASK_ID,
+        tt.STATE as TASK_STATE,
+        tt.TASK_DESCRIPTION as TASK_DESCRIPTION,
+        tt.TASK_NUMBER as TASK_NUMBER,
+        tt.TENANT_ID as TASK_TENANT_ID,
+        tt.creation_date as TASK_CREATION_DATE,
+        tt.created_by as TASK_CREATED_BY,
+        tt.last_updated_by as TASK_LAST_UPDATED_BY,
+        tt.last_update_date as TASK_LAST_UPDATE_DATE,
+        tt.object_version_number as TASK_OBJECT_VERSION_NUMBER,
+        tt.task_type as TASK_TASK_TYPE
+        from todo_user tu
+        JOIN todo_task tt on tu.employee_number = tt.EMPLOYEE_ID
+        <where>
+            <if test="id !=null">
+                and tu.ID = #{id,jdbcType = INTEGER}
+            </if>
+            <if test="email !=null">
+                and tu.email = #{email,jdbcType = VARCHAR}
+            </if>
+            <if test="employeeName !=null">
+                and tu.employee_name = #{employeeName,jdbcType = VARCHAR}
+            </if>
+            <if test="employeeNumber !=null">
+                and tu.employee_number = #{employeeNumber,jdbcType = VARCHAR}
+            </if>
+            <if test="userAccount !=null">
+                and tu.user_account = #{userAccount,jdbcType = VARCHAR}
+            </if>
+            <if test="userPassword !=null">
+                and tu.user_password = #{userPassword,jdbcType = VARCHAR}
+            </if>
+            <if test="taskList != null and taskList.size() > 0">
+                and tt.EMPLOYEE_ID in
+                <foreach collection="taskList" open="(" close=")" item="employeeId" separator=",">
+                    #{employeeId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>
+
