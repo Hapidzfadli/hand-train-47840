@@ -1,6 +1,7 @@
 package com.hand.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hand.infra.constant.UserConstant;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
@@ -17,6 +18,7 @@ import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hzero.core.cache.CacheValue;
 import org.hzero.export.annotation.ExcelColumn;
 import org.hzero.export.annotation.ExcelSheet;
 
@@ -73,6 +75,17 @@ public class User extends AuditDomain {
     @ExcelColumn(en = "User Password")
     private String userPassword;
 
+    @CacheValue(key= UserConstant.Configuration.CACHE_USER,
+            primaryKey = "createdBy", searchKey = "employeeName",
+            structure = CacheValue.DataStructure.MAP_OBJECT
+    )
+    private Long createdBy;
+
+    @CacheValue(key=UserConstant.Configuration.CACHE_USER,
+            primaryKey = "lastUpdatedBy", searchKey = "employeeName",
+            structure = CacheValue.DataStructure.MAP_OBJECT
+    )
+    private Long lastUpdatedBy;
 
 }
 

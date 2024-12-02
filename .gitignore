@@ -3,6 +3,9 @@ target/
 *.versionsBackup
 .factorypath
 
+# doc ignore
+doc/
+
 # eclipse ignore
 .settings/
 .project

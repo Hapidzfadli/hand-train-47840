@@ -38,7 +38,7 @@ public class Task extends AuditDomain {
     @ApiModelProperty("Primary Key")
     @Id
     @GeneratedValue
-    @ExcelColumn(zh = "Task ID", en = "Task ID", order = 0)
+    @ExcelColumn(zh = "Task ID", en = "Task ID", order = 1)
     private Long id;
 
     @ApiModelProperty(value = "Employee ID，TODO_USER.ID", required = true)

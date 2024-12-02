@@ -119,6 +119,10 @@
             <artifactId>hzero-starter-export</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-redis</artifactId>
+        </dependency>
 
         <!-- test -->
         <dependency>
