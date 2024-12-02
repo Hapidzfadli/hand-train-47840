@@ -47,14 +47,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> exportData(UserDTO userDTO) {
         List<UserDTO> userList = userRepository.selectList(userDTO);
-        List<Long> userIdList = new ArrayList<>();
-        userList.forEach(user -> userIdList.add(user.getId()));
+        List<String> employeeIdList = userList.stream().map(UserDTO::getEmployeeNumber).collect(Collectors.toList());
+
         TaskDTO newTask = new TaskDTO();
-        newTask.setEmpIdList(userIdList);
-        Map<Long, List<TaskDTO>> taskMap = taskService.selectList(newTask)
-                .stream()
+        newTask.setEmpIdList(employeeIdList.stream().map(Long::valueOf).collect(Collectors.toList()));
+        List<TaskDTO> taskList = taskService.selectList(newTask);
+
+        Map<Long, List<TaskDTO>> taskMap = taskList.stream()
                 .collect(Collectors.groupingBy(TaskDTO::getEmployeeId));
-        userList.forEach(user -> user.setTaskList(taskMap.get(user.getId())));
+
+        userList.forEach(user -> user.setTaskList(taskMap.getOrDefault(Long.valueOf(user.getEmployeeNumber()), new ArrayList<>())));
+
         return userList;
     }
 }

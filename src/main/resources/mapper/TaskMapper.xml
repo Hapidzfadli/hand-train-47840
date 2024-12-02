@@ -90,7 +90,7 @@
             </if>
             <if test="empIdList != null and empIdList.size() > 0">
                 and tt.EMPLOYEE_ID in
-                <foreach collection="empIdList" open="(" close=")" item="empId" separator=",">
+                <foreach collection="empIdList" item="empId" open="(" separator="," close=")">
                     #{empId}
                 </foreach>
             </if>
